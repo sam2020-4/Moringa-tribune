@@ -1,3 +1,4 @@
+from .email import send_welcome_email
 from .forms import NewsLetterForm
 from django.shortcuts import render,redirect
 from django.http  import HttpResponse,Http404,HttpResponseRedirect
