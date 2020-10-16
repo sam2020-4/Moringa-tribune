@@ -1,6 +1,7 @@
 from .forms import NewsLetterForm
 from django.shortcuts import render,redirect
-from django.http  import HttpResponse,Http404
+from django.http  import HttpResponse,Http404,HttpResponseRedirect
+
 import datetime as dt
 from .models import Article
 
@@ -21,11 +22,14 @@ def news_today(request):
     if request.method == 'POST':
         form = NewsLetterForm(request.POST)
         if form.is_valid():
-            print('valid')
+            name = form.cleaned_data['your_name']
+            email = form.cleaned_data['email']
+            recipient = NewsLetterRecipients( name = name,email =email)
+            recipient.save()
+            HttpResponseRedirect('news_today')
     else:
         form = NewsLetterForm()
     return render(request, 'all-news/today-news.html', {"date": date,"news":news,"letterForm":form})
-    # return render(request, 'all-news/today-news.html', {"date": date,"news":news})
 
 def past_days_news(request, past_date):
     try:
