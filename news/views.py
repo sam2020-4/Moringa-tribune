@@ -3,6 +3,7 @@ from .forms import NewsLetterForm
 from django.shortcuts import render,redirect
 from django.http  import HttpResponse,Http404,HttpResponseRedirect
 from .models import  NewsLetterRecipients
+from django.contrib.auth.decorators import login_required
 
 import datetime as dt
 from .models import Article
@@ -17,6 +18,10 @@ def news_of_day(request):
 
 
 # updating views
+# def news_today(request):
+#     date = dt.date.today()
+#     news = Article.todays_news()
+
 def news_today(request):
     date = dt.date.today()
     news = Article.todays_news()
@@ -26,12 +31,18 @@ def news_today(request):
         if form.is_valid():
             name = form.cleaned_data['your_name']
             email = form.cleaned_data['email']
+
             recipient = NewsLetterRecipients(name = name,email =email)
             recipient.save()
+            send_welcome_email(name,email)
+
             HttpResponseRedirect('news_today')
+
     else:
         form = NewsLetterForm()
     return render(request, 'all-news/today-news.html', {"date": date,"news":news,"letterForm":form})
+
+
 def past_days_news(request, past_date):
     try:
         # Converts data from the string Url
@@ -62,6 +73,7 @@ def search_results(request):
         return render(request, 'all-news/search.html',{"message":message})
 
 
+@login_required(login_url='/accounts/login/')
 def article(request,article_id):
     try:
         article = Article.objects.get(id = article_id)
