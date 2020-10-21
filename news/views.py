@@ -2,6 +2,7 @@ from .email import send_welcome_email
 from .forms import NewsLetterForm
 from django.shortcuts import render,redirect
 from django.http  import HttpResponse,Http404,HttpResponseRedirect
+from .models import  NewsLetterRecipients
 
 import datetime as dt
 from .models import Article
@@ -31,7 +32,6 @@ def news_today(request):
     else:
         form = NewsLetterForm()
     return render(request, 'all-news/today-news.html', {"date": date,"news":news,"letterForm":form})
-
 def past_days_news(request, past_date):
     try:
         # Converts data from the string Url
