@@ -52,3 +52,9 @@
   
 </div>
 {% endblock %}
+
+<!-- adding loading ajax to the page -->
+
+{% block scripts %} {{block.super}}
+  <script type="text/javascript" src="{%static 'js/newsletter.js'%}"></script>
+{% endblock %}
